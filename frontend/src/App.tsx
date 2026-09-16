@@ -24,7 +24,7 @@ import { AssetsPage } from './pages/AssetsPage';
 
 function AppContent() {
   const { isAuthenticated, isLoading } = useAuth();
-  const [currentView, setCurrentView] = useState<string>('dashboard');
+  const [currentView, setCurrentView] = useState<string>('landing');
   const [viewParam, setViewParam] = useState<string | undefined>(undefined);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showDemoFlowGuide, setShowDemoFlowGuide] = useState(false);
