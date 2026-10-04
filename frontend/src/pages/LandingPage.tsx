@@ -463,106 +463,207 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
           </div>
         </div>
 
-        {/* 3. HUMAN-DESIGNED HERO VISUAL (REAL PRODUCT PROTOTYPE) */}
+        {/* 3. REALISTIC APP UI PREVIEW */}
         <div className="mt-12 max-w-5xl mx-auto">
-          <div className="rounded-xl bg-[#0a0f1d] border border-slate-800 shadow-xl overflow-hidden">
-            {/* Window title bar */}
-            <div className="h-9 bg-slate-950 px-4 flex items-center justify-between border-b border-slate-800 text-xs font-mono text-slate-400">
-              <div className="flex items-center space-x-2">
-                <span className="w-2 h-2 rounded-full bg-slate-700" />
-                <span className="w-2 h-2 rounded-full bg-slate-700" />
-                <span className="w-2 h-2 rounded-full bg-slate-700" />
-                <span className="text-slate-600 ml-2">|</span>
-                <span className="text-slate-300 font-semibold truncate">
-                  SECUREVAULT // INVESTIGATION WORKSPACE // CASE-2026-0142
-                </span>
+          {/* Browser chrome */}
+          <div className="rounded-t-xl bg-[#0d1426] border border-slate-700/60 border-b-0 px-4 py-2.5 flex items-center gap-3">
+            <div className="flex items-center gap-1.5">
+              <span className="w-3 h-3 rounded-full bg-rose-500/70" />
+              <span className="w-3 h-3 rounded-full bg-amber-400/70" />
+              <span className="w-3 h-3 rounded-full bg-emerald-500/70" />
+            </div>
+            <div className="flex-1 mx-2 bg-[#0a1020] border border-slate-700/40 rounded-md px-3 py-1 text-[11px] font-mono text-slate-400 text-left">
+              🔒 securevault.gov.in/dashboard
+            </div>
+            <div className="flex items-center gap-1.5 text-[10px] font-mono">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+              <span className="text-emerald-400">SECURE</span>
+            </div>
+          </div>
+
+          {/* App window */}
+          <div className="rounded-b-xl bg-[#0b1120] border border-slate-700/60 shadow-2xl overflow-hidden flex flex-col" style={{height: '520px'}}>
+
+            {/* Top bar */}
+            <div className="h-11 bg-[#0d1528] border-b border-slate-700/50 flex items-center px-4 flex-shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1.5">
+                  <Lock className="w-3.5 h-3.5 text-cyan-400" />
+                  <span className="font-bold text-[11px] tracking-widest text-white font-mono">SECURE<span className="text-cyan-400">VAULT</span></span>
+                </div>
+                <span className="text-slate-600 text-xs">/</span>
+                <span className="text-[11px] font-mono text-slate-400">Dashboard</span>
+                <span className="text-slate-600 text-xs">/</span>
+                <span className="text-[11px] font-mono text-cyan-300">CASE-2026-0142</span>
               </div>
-              <div className="flex items-center space-x-2 text-[11px]">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                <span className="text-emerald-400 font-mono">STATUS: ACTIVE</span>
+              <div className="ml-auto flex items-center gap-3">
+                <div className="hidden sm:flex items-center gap-2 bg-[#0a1020] border border-slate-700/40 rounded-md px-3 py-1.5 text-[10px] font-mono text-slate-500">
+                  <span>⌕</span>
+                  <span>Search cases, evidence...</span>
+                </div>
+                <div className="relative">
+                  <div className="w-7 h-7 rounded-md bg-[#0a1020] border border-slate-700/40 flex items-center justify-center text-slate-400">
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.006 6.006 0 00-9.33-4.976M15 17H9m6 0a3 3 0 11-6 0" /></svg>
+                  </div>
+                  <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-rose-500 rounded-full text-[8px] text-white flex items-center justify-center font-bold">3</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-[10px] font-bold text-white">SK</div>
+                  <div className="hidden sm:block">
+                    <div className="text-[10px] font-mono text-white font-semibold">Sr. Inv. Sharma</div>
+                    <div className="text-[9px] font-mono text-cyan-400">SV-INV-104 · CONFIDENTIAL</div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Product Interface Body */}
-            <div className="p-6 space-y-6 bg-[#080d1a]">
-              {/* Primary Case Header */}
-              <div className="p-4 rounded-lg bg-slate-900/80 border border-slate-800/90 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-2 font-mono text-xs">
-                    <span className="px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800 font-bold">
-                      CASE-2026-0142
-                    </span>
-                    <span className="text-slate-400">•</span>
-                    <span className="text-slate-300 font-semibold">Financial Investigation & Forgery Ring</span>
-                  </div>
-                  <p className="text-xs text-slate-400 font-sans">
-                    Lead: Senior Investigator Sharma (SV-INV-104) • Unit: Special Anti-Cartel & Digital Forensics Wing
-                  </p>
-                </div>
+            {/* App body */}
+            <div className="flex flex-1 overflow-hidden">
 
-                <div className="flex items-center space-x-2 font-mono text-xs">
-                  <span className="px-2.5 py-1 rounded bg-slate-950 border border-slate-800 text-slate-300 text-[11px]">
-                    Clearance: <strong className="text-cyan-400">CONFIDENTIAL</strong>
-                  </span>
+              {/* Sidebar */}
+              <div className="w-44 bg-[#0a1020] border-r border-slate-700/40 flex-shrink-0 flex-col py-3 hidden sm:flex">
+                {[
+                  { label: 'Dashboard', active: false, badge: null, icon: <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> },
+                  { label: 'Cases', active: true, badge: null, icon: <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M3 7h18M3 12h18M3 17h10"/></svg> },
+                  { label: 'Documents', active: false, badge: null, icon: <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> },
+                  { label: 'Evidence', active: false, badge: null, icon: <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg> },
+                  { label: 'Audit Log', active: false, badge: '12', icon: <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> },
+                  { label: 'Security', active: false, badge: null, icon: <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg> },
+                ].map((item, i) => (
+                  <div key={i} className={`flex items-center gap-2.5 mx-2 px-2.5 py-2 rounded-md text-[11px] font-mono cursor-pointer mb-0.5 ${item.active ? 'bg-cyan-500/10 text-cyan-300 border border-cyan-500/20' : 'text-slate-400 hover:bg-slate-800/40 hover:text-slate-200'}`}>
+                    <span className={item.active ? 'text-cyan-400' : 'text-slate-500'}>{item.icon}</span>
+                    <span>{item.label}</span>
+                    {item.badge && <span className="ml-auto text-[8px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-1 rounded font-bold">{item.badge}</span>}
+                  </div>
+                ))}
+                <div className="mt-auto mx-2 p-2.5 rounded-md bg-cyan-950/40 border border-cyan-500/20">
+                  <div className="text-[9px] font-mono text-slate-500 uppercase">Clearance Level</div>
+                  <div className="text-[10px] font-mono font-bold text-cyan-400 mt-0.5">CONFIDENTIAL</div>
+                  <div className="text-[9px] font-mono text-slate-500 mt-0.5">Session: 8h 42m left</div>
                 </div>
               </div>
 
-              {/* Realistic Information Hierarchy Strip */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono">
-                <div className="p-3 rounded-lg bg-slate-900/40 border border-slate-800">
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Documents</div>
-                  <div className="text-xl font-bold text-white mt-0.5">128</div>
-                  <div className="text-[10px] text-slate-400 mt-0.5">All SHA-256 Indexed</div>
-                </div>
-
-                <div className="p-3 rounded-lg bg-slate-900/40 border border-slate-800">
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Evidence Items</div>
-                  <div className="text-xl font-bold text-white mt-0.5">24</div>
-                  <div className="text-[10px] text-cyan-400 mt-0.5">8-Stage Custody Chain</div>
-                </div>
-
-                <div className="p-3 rounded-lg bg-slate-900/40 border border-slate-800">
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Integrity State</div>
-                  <div className="text-xl font-bold text-emerald-400 mt-0.5">VERIFIED</div>
-                  <div className="text-[10px] text-slate-400 mt-0.5">0 Tamper Anomalies</div>
-                </div>
-
-                <div className="p-3 rounded-lg bg-slate-900/40 border border-slate-800">
-                  <div className="text-[10px] text-slate-400 uppercase font-semibold">Audit Chain</div>
-                  <div className="text-xl font-bold text-emerald-400 mt-0.5">VALID</div>
-                  <div className="text-[10px] text-slate-400 mt-0.5">Genesis Block Anchored</div>
-                </div>
-              </div>
-
-              {/* Recent Activity Rows */}
-              <div className="space-y-2 font-mono text-xs">
-                <div className="text-[11px] text-slate-400 uppercase font-bold flex items-center justify-between">
-                  <span>Recent Case Activity</span>
-                  <span className="text-slate-500 font-normal">Real-Time Audit Stream</span>
-                </div>
-
-                <div className="p-2.5 rounded-lg bg-slate-950/70 border border-slate-800 flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                    <span className="text-white">Evidence EV-1042 verified by Forensic Analyst Rostova</span>
+              {/* Main content */}
+              <div className="flex-1 flex flex-col overflow-hidden">
+                {/* Sub-header */}
+                <div className="px-4 pt-3 pb-2 border-b border-slate-700/30 flex items-center justify-between flex-shrink-0">
+                  <div>
+                    <div className="text-[11px] font-mono font-bold text-white">Active Cases</div>
+                    <div className="text-[10px] font-mono text-slate-500">7 cases · 4 active · 2 under review</div>
                   </div>
-                  <span className="text-slate-500 text-[11px]">2 min ago</span>
+                  <div className="flex items-center gap-2">
+                    <div className="text-[10px] font-mono px-2 py-1 rounded bg-[#0a1020] border border-slate-700/40 text-slate-400">Filter ▾</div>
+                    <div className="text-[10px] font-mono px-2.5 py-1 rounded bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-bold">+ New Case</div>
+                  </div>
                 </div>
 
-                <div className="p-2.5 rounded-lg bg-slate-950/70 border border-slate-800 flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-                    <span className="text-white">Access request approved for Senior Inv Sharma (Clearance: CONFIDENTIAL)</span>
-                  </div>
-                  <span className="text-slate-500 text-[11px]">18 min ago</span>
-                </div>
+                <div className="flex flex-1 overflow-hidden">
+                  <div className="flex-1 overflow-auto">
+                    {/* Mini sparkline */}
+                    <div className="px-4 pt-3 pb-2 border-b border-slate-700/20">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-[10px] font-mono text-slate-400 uppercase font-bold">Evidence Intake — Last 7 Days</span>
+                        <span className="text-[10px] font-mono text-emerald-400 font-bold">↑ 14% this week</span>
+                      </div>
+                      <svg viewBox="0 0 340 48" className="w-full h-10" preserveAspectRatio="none">
+                        <defs>
+                          <linearGradient id="heroChartGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.25" />
+                            <stop offset="100%" stopColor="#22d3ee" stopOpacity="0" />
+                          </linearGradient>
+                        </defs>
+                        <line x1="0" y1="16" x2="340" y2="16" stroke="#1e293b" strokeWidth="0.5" />
+                        <line x1="0" y1="32" x2="340" y2="32" stroke="#1e293b" strokeWidth="0.5" />
+                        <path d="M0,38 L48,28 L96,34 L144,18 L192,22 L240,10 L288,14 L340,8 L340,48 L0,48 Z" fill="url(#heroChartGrad)" />
+                        <path d="M0,38 L48,28 L96,34 L144,18 L192,22 L240,10 L288,14 L340,8" fill="none" stroke="#22d3ee" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        {([[0,38],[48,28],[96,34],[144,18],[192,22],[240,10],[288,14],[340,8]] as [number,number][]).map(([x,y],i) => (
+                          <circle key={i} cx={x} cy={y} r="2.5" fill="#22d3ee" opacity="0.8" />
+                        ))}
+                        {['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((d,i) => (
+                          <text key={i} x={i*48+24} y="47" textAnchor="middle" fontSize="6" fill="#475569" fontFamily="monospace">{d}</text>
+                        ))}
+                      </svg>
+                    </div>
 
-                <div className="p-2.5 rounded-lg bg-slate-950/70 border border-slate-800 flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
-                    <span className="text-white">Document version created: Charge Sheet v1.2 (SHA-256: 7d8a21...)</span>
+                    {/* Cases table */}
+                    <table className="w-full text-left font-mono" style={{fontSize: '10px'}}>
+                      <thead>
+                        <tr className="bg-[#0a1020] text-slate-500 border-b border-slate-700/30" style={{fontSize: '9px'}}>
+                          <th className="py-2 px-4 font-bold uppercase tracking-wide">Case ID</th>
+                          <th className="py-2 px-3 font-bold uppercase tracking-wide">Title</th>
+                          <th className="py-2 px-3 font-bold uppercase tracking-wide hidden md:table-cell">Lead</th>
+                          <th className="py-2 px-3 font-bold uppercase tracking-wide">Docs</th>
+                          <th className="py-2 px-3 font-bold uppercase tracking-wide hidden sm:table-cell">Last Activity</th>
+                          <th className="py-2 px-3 font-bold uppercase tracking-wide">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-700/20">
+                        {[
+                          { id: 'CASE-2026-0142', title: 'Financial Fraud & Vehicle Forgery', lead: 'Sr. Inv. Sharma', docs: 128, ev: 24, last: '2 min ago', status: 'ACTIVE', sc: 'text-emerald-400 bg-emerald-950/60 border-emerald-700/50', sel: true },
+                          { id: 'CASE-2026-0138', title: 'Cyber Extortion — FinTech Sector', lead: 'Det. Marcus Vance', docs: 74, ev: 11, last: '1 hr ago', status: 'ACTIVE', sc: 'text-emerald-400 bg-emerald-950/60 border-emerald-700/50', sel: false },
+                          { id: 'CASE-2026-0131', title: 'Identity Theft Ring — 14 Suspects', lead: 'Inv. Chen Wei', docs: 91, ev: 37, last: '3 hr ago', status: 'REVIEW', sc: 'text-amber-400 bg-amber-950/60 border-amber-700/50', sel: false },
+                          { id: 'CASE-2025-0098', title: 'Hawala Network — Cross-State', lead: 'Sr. Inv. Sharma', docs: 204, ev: 58, last: 'Yesterday', status: 'PENDING', sc: 'text-sky-400 bg-sky-950/60 border-sky-700/50', sel: false },
+                          { id: 'CASE-2025-0074', title: 'Drug Trafficking — Port Authority', lead: 'Sp. Agent Nair', docs: 312, ev: 89, last: '3 days ago', status: 'COURT', sc: 'text-violet-400 bg-violet-950/60 border-violet-700/50', sel: false },
+                        ].map((c, i) => (
+                          <tr key={i} className={`cursor-pointer transition-colors ${c.sel ? 'bg-cyan-950/20 border-l-2 border-l-cyan-500' : 'hover:bg-slate-800/20'}`}>
+                            <td className="py-2.5 px-4 font-bold text-cyan-400 whitespace-nowrap">{c.id}</td>
+                            <td className="py-2.5 px-3 text-slate-200 max-w-[140px]"><span className="block truncate">{c.title}</span></td>
+                            <td className="py-2.5 px-3 text-slate-400 hidden md:table-cell whitespace-nowrap">{c.lead}</td>
+                            <td className="py-2.5 px-3 text-slate-300">{c.docs}<span className="text-slate-600 ml-1">/ {c.ev}ev</span></td>
+                            <td className="py-2.5 px-3 text-slate-500 hidden sm:table-cell whitespace-nowrap">{c.last}</td>
+                            <td className="py-2.5 px-3">
+                              <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold border ${c.sc}`}>{c.status}</span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-                  <span className="text-slate-500 text-[11px]">41 min ago</span>
+
+                  {/* Right panel */}
+                  <div className="w-48 border-l border-slate-700/30 bg-[#0a1020] flex-shrink-0 hidden lg:flex flex-col overflow-auto">
+                    <div className="px-3 py-2.5 border-b border-slate-700/30">
+                      <div className="text-[9px] font-mono text-slate-500 uppercase font-bold">Case Inspector</div>
+                      <div className="text-[11px] font-mono text-cyan-300 font-bold mt-0.5">CASE-2026-0142</div>
+                    </div>
+                    <div className="px-3 py-2 space-y-2 flex-1">
+                      {[
+                        { label: 'Documents', value: '128', sub: 'All verified', color: 'text-white' },
+                        { label: 'Evidence', value: '24', sub: '8-stage chain', color: 'text-cyan-400' },
+                        { label: 'Integrity', value: '100%', sub: '0 anomalies', color: 'text-emerald-400' },
+                        { label: 'Access Log', value: '1,482', sub: 'Audit entries', color: 'text-amber-400' },
+                      ].map((s, i) => (
+                        <div key={i} className="p-2 rounded-md bg-[#0d1426] border border-slate-700/30">
+                          <div className="text-[9px] font-mono text-slate-500 uppercase">{s.label}</div>
+                          <div className={`text-sm font-bold font-mono mt-0.5 ${s.color}`}>{s.value}</div>
+                          <div className="text-[9px] font-mono text-slate-500">{s.sub}</div>
+                        </div>
+                      ))}
+                      <div className="p-2 rounded-md bg-emerald-950/40 border border-emerald-700/30 text-center">
+                        <div className="text-[9px] font-mono text-slate-500 uppercase mb-0.5">Hash Chain</div>
+                        <div className="text-[10px] font-mono text-emerald-400 font-bold">✓ UNBROKEN</div>
+                        <div className="text-[8px] font-mono text-slate-600 mt-0.5">Genesis → Block #482</div>
+                      </div>
+                      <div>
+                        <div className="text-[9px] font-mono text-slate-500 uppercase mb-1.5">EV-1042 Custody</div>
+                        <div className="space-y-1">
+                          {['Collected','Uploaded','Verified','Assigned','Examined','Submitted'].map((st, i) => (
+                            <div key={i} className="flex items-center gap-1.5">
+                              <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${i < 4 ? 'bg-emerald-400' : i === 4 ? 'bg-cyan-400' : 'bg-slate-600'}`} />
+                              <div className={`text-[9px] font-mono ${i < 4 ? 'text-slate-400' : i === 4 ? 'text-cyan-300 font-bold' : 'text-slate-600'}`}>{st}</div>
+                              {i < 4 && <div className="ml-auto text-[8px] font-mono text-slate-600">✓</div>}
+                              {i === 4 && <div className="ml-auto text-[8px] font-mono text-cyan-500">←</div>}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="px-3 py-2.5 border-t border-slate-700/30">
+                      <div className="w-full text-center text-[10px] font-mono font-bold text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 rounded py-1.5 cursor-pointer">
+                        Full Case View →
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
