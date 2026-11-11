@@ -38,6 +38,7 @@ import {
   RefreshCw,
   AlertTriangle,
   CheckCircle,
+  Sparkles,
 } from 'lucide-react';
 
 interface LandingPageProps {
@@ -82,6 +83,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
   const [activeDossierTab, setActiveDossierTab] = useState<
     'statement' | 'challenges' | 'mandates' | 'lifecycle'
   >('statement');
+
+  // -------------------------------------------------------------
+  // MOUSE MOVEMENT ANIMATION STATE
+  // -------------------------------------------------------------
+  const [globalMousePos, setGlobalMousePos] = useState({ x: -1000, y: -1000 });
+  const [heroTilt, setHeroTilt] = useState({ x: 0, y: 0 });
+  const [heroMousePos, setHeroMousePos] = useState({ x: 0, y: 0 });
+  const [isMouseOverHero, setIsMouseOverHero] = useState(false);
 
   // -------------------------------------------------------------
   // DYNAMIC HERO APP MOCKUP STATE
@@ -187,6 +196,30 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
     }
     return () => clearInterval(interval);
   }, [isAutoPlayingTimeline]);
+
+  // Global mouse move tracker for dynamic spotlight
+  const handleGlobalMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    setGlobalMousePos({ x: e.clientX, y: e.clientY });
+  };
+
+  // Hero interactive 3D perspective tilt
+  const handleHeroMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -3.5;
+    const rotateY = ((x - centerX) / centerX) * 3.5;
+    setHeroTilt({ x: rotateX, y: rotateY });
+    setHeroMousePos({ x, y });
+    setIsMouseOverHero(true);
+  };
+
+  const handleHeroMouseLeave = () => {
+    setHeroTilt({ x: 0, y: 0 });
+    setIsMouseOverHero(false);
+  };
 
   const scrollTo = (id: string) => {
     setMobileMenuOpen(false);
@@ -536,7 +569,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
   const isLight = theme === 'light';
   const pageBg = isLight ? 'bg-slate-50 text-slate-900' : 'bg-[#060913] text-slate-100';
   const cardBg = isLight ? 'bg-white border-slate-200 shadow-xs' : 'bg-[#0e1629] border-slate-800';
-  const headerBg = isLight ? 'bg-white/95 border-b border-slate-200' : 'bg-[#080d1a]/90 border-b border-slate-800/80';
+  const headerBg = isLight ? 'bg-white/95 border-b border-slate-200 shadow-xs' : 'bg-[#080d1a]/90 border-b border-slate-800/80';
   const subtleBoxBg = isLight ? 'bg-slate-100/80 border-slate-200' : 'bg-slate-950 border-slate-800';
   const textMuted = isLight ? 'text-slate-600' : 'text-slate-400';
   const textSubtle = isLight ? 'text-slate-500' : 'text-slate-500';
@@ -555,9 +588,40 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
   ];
 
   return (
-    <div className={`min-h-screen ${pageBg} selection:bg-cyan-100 selection:text-cyan-900 transition-colors duration-200`}>
+    <div
+      onMouseMove={handleGlobalMouseMove}
+      className={`min-h-screen ${pageBg} selection:bg-cyan-100 selection:text-cyan-900 transition-colors duration-200 relative overflow-hidden`}
+    >
+      {/* -------------------------------------------------------------------------- */}
+      {/* INTERACTIVE MOUSE MOVEMENT SPOTLIGHT & AMBIENT AURA                        */}
+      {/* -------------------------------------------------------------------------- */}
+      <div
+        className="pointer-events-none fixed inset-0 z-30 transition-opacity duration-300"
+        style={{
+          background: `radial-gradient(650px circle at ${globalMousePos.x}px ${globalMousePos.y}px, ${
+            isLight ? 'rgba(6, 182, 212, 0.08)' : 'rgba(34, 211, 238, 0.12)'
+          }, transparent 65%)`,
+        }}
+      />
+
+      {/* Trailing Micro-Cursor Follower */}
+      <div
+        className="pointer-events-none fixed z-50 w-7 h-7 rounded-full border border-cyan-500/50 -translate-x-1/2 -translate-y-1/2 transition-transform duration-75 hidden md:block"
+        style={{
+          left: `${globalMousePos.x}px`,
+          top: `${globalMousePos.y}px`,
+          boxShadow: isLight
+            ? '0 0 16px rgba(6, 182, 212, 0.25)'
+            : '0 0 20px rgba(34, 211, 238, 0.45)',
+        }}
+      />
+
+      {/* Ambient background light orbs */}
+      <div className="absolute top-20 left-1/2 -translate-x-1/2 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none animate-ambient-glow" />
+      <div className="absolute top-96 right-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none animate-ambient-glow delay-300" />
+
       {/* 1. ENTERPRISE LIVE STATUS & NAVIGATION */}
-      <div className={`py-1.5 px-6 md:px-12 text-[11px] font-mono border-b flex items-center justify-between ${isLight ? 'bg-cyan-50/70 border-cyan-100 text-cyan-900' : 'bg-cyan-950/40 border-cyan-900/40 text-cyan-300'}`}>
+      <div className={`py-1.5 px-6 md:px-12 text-[11px] font-mono border-b flex items-center justify-between animate-fade-in ${isLight ? 'bg-cyan-50/70 border-cyan-100 text-cyan-900' : 'bg-cyan-950/40 border-cyan-900/40 text-cyan-300'}`}>
         <div className="flex items-center space-x-2">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="font-bold">GENESIS AUDIT LEDGER SYNCHRONIZED</span>
@@ -574,10 +638,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
         </div>
       </div>
 
-      <header className={`h-16 ${headerBg} backdrop-blur-md px-6 md:px-12 flex items-center justify-between sticky top-0 z-50 transition-colors`}>
+      <header className={`h-16 ${headerBg} backdrop-blur-md px-6 md:px-12 flex items-center justify-between sticky top-0 z-40 transition-colors animate-fade-in-down`}>
         {/* Brand identity */}
-        <div className="flex items-center space-x-3 cursor-pointer" onClick={() => scrollTo('hero')}>
-          <div className={`w-9 h-9 rounded-lg flex items-center justify-center border shadow-xs ${isLight ? 'bg-slate-900 border-slate-800 text-cyan-400' : 'bg-slate-900 border-cyan-500/40 text-cyan-400'}`}>
+        <div className="flex items-center space-x-3 cursor-pointer group" onClick={() => scrollTo('hero')}>
+          <div className={`w-9 h-9 rounded-lg flex items-center justify-center border shadow-xs transition-transform duration-200 group-hover:scale-105 ${isLight ? 'bg-slate-900 border-slate-800 text-cyan-400' : 'bg-slate-900 border-cyan-500/40 text-cyan-400'}`}>
             <Lock className="w-4 h-4" />
           </div>
           <div>
@@ -597,25 +661,25 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
 
         {/* Calm Desktop Navigation Links */}
         <nav className={`hidden lg:flex items-center space-x-6 text-xs font-mono font-medium ${isLight ? 'text-slate-600' : 'text-slate-400'}`}>
-          <button onClick={() => scrollTo('problem')} className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">
+          <button onClick={() => scrollTo('problem')} className="hover:text-cyan-600 dark:hover:text-cyan-400 transition hover:-translate-y-0.5 transform duration-150">
             Problem
           </button>
-          <button onClick={() => scrollTo('product')} className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">
+          <button onClick={() => scrollTo('product')} className="hover:text-cyan-600 dark:hover:text-cyan-400 transition hover:-translate-y-0.5 transform duration-150">
             Platform
           </button>
-          <button onClick={() => scrollTo('evidence')} className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">
+          <button onClick={() => scrollTo('evidence')} className="hover:text-cyan-600 dark:hover:text-cyan-400 transition hover:-translate-y-0.5 transform duration-150">
             Evidence Chain
           </button>
-          <button onClick={() => scrollTo('documents')} className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">
+          <button onClick={() => scrollTo('documents')} className="hover:text-cyan-600 dark:hover:text-cyan-400 transition hover:-translate-y-0.5 transform duration-150">
             Documents
           </button>
-          <button onClick={() => scrollTo('security')} className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">
+          <button onClick={() => scrollTo('security')} className="hover:text-cyan-600 dark:hover:text-cyan-400 transition hover:-translate-y-0.5 transform duration-150">
             Security & Tamper Lab
           </button>
-          <button onClick={() => scrollTo('investigation-tree')} className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">
+          <button onClick={() => scrollTo('investigation-tree')} className="hover:text-cyan-600 dark:hover:text-cyan-400 transition hover:-translate-y-0.5 transform duration-150">
             Case Tree
           </button>
-          <button onClick={() => scrollTo('dossier')} className="hover:text-cyan-600 dark:hover:text-cyan-400 transition">
+          <button onClick={() => scrollTo('dossier')} className="hover:text-cyan-600 dark:hover:text-cyan-400 transition hover:-translate-y-0.5 transform duration-150">
             SIH Dossier
           </button>
         </nav>
@@ -625,7 +689,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
           {/* Dynamic Theme Toggle Pill */}
           <button
             onClick={() => setTheme(isLight ? 'dark' : 'light')}
-            className={`px-2.5 py-1.5 rounded-lg border text-xs font-mono flex items-center space-x-1.5 transition shadow-xs ${
+            className={`px-2.5 py-1.5 rounded-lg border text-xs font-mono flex items-center space-x-1.5 transition shadow-xs hover:scale-105 active:scale-95 transform ${
               isLight
                 ? 'bg-slate-100 hover:bg-slate-200 border-slate-300 text-slate-800'
                 : 'bg-slate-900 hover:bg-slate-800 border-slate-700 text-slate-200'
@@ -656,7 +720,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
 
           <button
             onClick={onEnterApp}
-            className="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm flex items-center space-x-1.5 transition active:scale-95"
+            className="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-sm flex items-center space-x-1.5 transition transform hover:scale-105 active:scale-95"
           >
             <span>Open Platform</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -677,7 +741,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
 
       {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className={`lg:hidden border-b px-6 py-4 space-y-3 font-mono text-xs ${isLight ? 'bg-white border-slate-200 text-slate-800' : 'bg-[#0a0f1d] border-slate-800 text-slate-300'}`}>
+        <div className={`lg:hidden border-b px-6 py-4 space-y-3 font-mono text-xs animate-fade-in-down ${isLight ? 'bg-white border-slate-200 text-slate-800' : 'bg-[#0a0f1d] border-slate-800 text-slate-300'}`}>
           <button onClick={() => scrollTo('problem')} className="block w-full text-left py-1.5 hover:text-cyan-600">
             1. The Problem
           </button>
@@ -713,17 +777,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
         </div>
       )}
 
-      {/* 2. HERO — PRODUCT FIRST */}
+      {/* 2. HERO — PRODUCT FIRST (WITH ENTRANCE ANIMATIONS & MOUSE 3D TILT) */}
       <section id="hero" className="relative pt-14 pb-16 px-6 md:px-12 max-w-6xl mx-auto">
         <div className="text-center max-w-3xl mx-auto space-y-4">
-          {/* Eyebrow */}
-          <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full border text-xs font-mono tracking-wider uppercase font-semibold ${isLight ? 'bg-cyan-50 border-cyan-200 text-cyan-800' : 'bg-cyan-950/60 border-cyan-500/30 text-cyan-300'}`}>
-            <Shield className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-            <span>SECURE DIGITAL DOCUMENT & INVESTIGATION PLATFORM</span>
+          {/* Eyebrow with entrance animation */}
+          <div className="animate-fade-in-down">
+            <div className={`inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full border text-xs font-mono tracking-wider uppercase font-semibold shadow-xs ${isLight ? 'bg-cyan-50 border-cyan-200 text-cyan-800' : 'bg-cyan-950/60 border-cyan-500/30 text-cyan-300'}`}>
+              <Shield className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+              <span>SECURE DIGITAL DOCUMENT & INVESTIGATION PLATFORM</span>
+              <Sparkles className="w-3 h-3 text-amber-500 animate-pulse" />
+            </div>
           </div>
 
-          {/* H1 Headline */}
-          <h1 className={`text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight ${isLight ? 'text-slate-900' : 'text-white'}`}>
+          {/* H1 Headline with staggered entrance */}
+          <h1 className={`text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight animate-fade-in-up delay-150 ${isLight ? 'text-slate-900' : 'text-white'}`}>
             Secure Every Document. <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-teal-600 to-blue-700 dark:from-cyan-400 dark:via-teal-300 dark:to-blue-400">
               Preserve Every Evidence Trail.
@@ -731,15 +798,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
           </h1>
 
           {/* Supporting text */}
-          <p className={`text-sm md:text-base max-w-2xl mx-auto leading-relaxed font-sans ${textMuted}`}>
+          <p className={`text-sm md:text-base max-w-2xl mx-auto leading-relaxed font-sans animate-fade-in-up delay-300 ${textMuted}`}>
             SecureVault brings sensitive investigative documents, evidence tracking, controlled access, and immutable auditability into one high-assurance platform.
           </p>
 
-          {/* Actions */}
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+          {/* Actions with hover animation */}
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3 animate-fade-in-up delay-400">
             <button
               onClick={onEnterApp}
-              className="px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-md flex items-center space-x-2 transition transform active:scale-95"
+              className="px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-md flex items-center space-x-2 transition transform hover:scale-105 active:scale-95"
             >
               <span>Explore Platform</span>
               <ArrowRight className="w-4 h-4" />
@@ -747,7 +814,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
 
             <button
               onClick={() => scrollTo('security')}
-              className={`px-6 py-3 border font-bold text-xs uppercase tracking-wider rounded-lg transition flex items-center space-x-2 font-mono ${
+              className={`px-6 py-3 border font-bold text-xs uppercase tracking-wider rounded-lg transition transform hover:scale-105 active:scale-95 flex items-center space-x-2 font-mono ${
                 isLight
                   ? 'bg-white hover:bg-slate-100 text-slate-800 border-slate-300 shadow-xs'
                   : 'bg-slate-900 hover:bg-slate-800 text-slate-200 border-slate-700'
@@ -759,16 +826,48 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
           </div>
         </div>
 
-        {/* 3. FULLY DYNAMIC ENTERPRISE APP UI PREVIEW */}
-        <div className="mt-12 max-w-5xl mx-auto">
-          {/* Browser chrome */}
-          <div className={`rounded-t-xl border px-4 py-2.5 flex items-center gap-3 ${isLight ? 'bg-slate-200 border-slate-300 border-b-0' : 'bg-[#0d1426] border-slate-700/60 border-b-0'}`}>
+        {/* 3. FULLY DYNAMIC ENTERPRISE APP UI PREVIEW WITH 3D MOUSE PARALLAX TILT */}
+        <div
+          onMouseMove={handleHeroMouseMove}
+          onMouseLeave={handleHeroMouseLeave}
+          className="mt-12 max-w-5xl mx-auto animate-scale-up delay-500 relative transition-transform duration-300"
+        >
+          {/* Subtle Parallax Reflection Backdrop */}
+          <div
+            className="absolute -inset-1 rounded-2xl opacity-50 blur-xl pointer-events-none transition-opacity duration-300"
+            style={{
+              background: isLight
+                ? `radial-gradient(circle at ${heroMousePos.x}px ${heroMousePos.y}px, rgba(6, 182, 212, 0.2), transparent 70%)`
+                : `radial-gradient(circle at ${heroMousePos.x}px ${heroMousePos.y}px, rgba(34, 211, 238, 0.3), transparent 70%)`,
+            }}
+          />
+
+          {/* Browser chrome with Interactive Mouse Light Sheen */}
+          <div
+            className={`rounded-t-xl border px-4 py-2.5 flex items-center gap-3 relative overflow-hidden ${
+              isLight ? 'bg-slate-200 border-slate-300 border-b-0' : 'bg-[#0d1426] border-slate-700/60 border-b-0'
+            }`}
+          >
+            {/* Dynamic mouse light reflection line */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-60"
+              style={{
+                background: isMouseOverHero
+                  ? `radial-gradient(500px circle at ${heroMousePos.x}px ${heroMousePos.y}px, rgba(255,255,255,0.4), transparent 60%)`
+                  : 'none',
+              }}
+            />
+
             <div className="flex items-center gap-1.5">
               <span className="w-3 h-3 rounded-full bg-rose-500/80" />
               <span className="w-3 h-3 rounded-full bg-amber-400/80" />
               <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
             </div>
-            <div className={`flex-1 mx-2 border rounded-md px-3 py-1 text-[11px] font-mono text-left flex items-center justify-between ${isLight ? 'bg-white border-slate-300 text-slate-600' : 'bg-[#0a1020] border-slate-700/40 text-slate-400'}`}>
+            <div
+              className={`flex-1 mx-2 border rounded-md px-3 py-1 text-[11px] font-mono text-left flex items-center justify-between ${
+                isLight ? 'bg-white border-slate-300 text-slate-600' : 'bg-[#0a1020] border-slate-700/40 text-slate-400'
+              }`}
+            >
               <span>🔒 https://securevault.gov.in/app/cases/{selectedCaseId.toLowerCase()}</span>
               <span className="text-[10px] text-emerald-600 font-bold hidden sm:inline">256-BIT TLS ENCRYPTED</span>
             </div>
@@ -778,8 +877,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
             </div>
           </div>
 
-          {/* App window */}
-          <div className={`rounded-b-xl border shadow-xl overflow-hidden flex flex-col ${isLight ? 'bg-slate-900 border-slate-300' : 'bg-[#0b1120] border-slate-700/60'}`} style={{ minHeight: '520px' }}>
+          {/* App window with 3D Mouse Movement Tilt */}
+          <div
+            className={`rounded-b-xl border shadow-2xl overflow-hidden flex flex-col ${
+              isLight ? 'bg-slate-900 border-slate-300' : 'bg-[#0b1120] border-slate-700/60'
+            }`}
+            style={{
+              minHeight: '520px',
+              transform: `perspective(1200px) rotateX(${heroTilt.x}deg) rotateY(${heroTilt.y}deg)`,
+              transition: isMouseOverHero
+                ? 'transform 0.08s ease-out'
+                : 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+              boxShadow: isLight
+                ? `${-heroTilt.y * 3}px ${heroTilt.x * 3 + 12}px 32px rgba(15, 23, 42, 0.12)`
+                : `${-heroTilt.y * 3}px ${heroTilt.x * 3 + 12}px 36px rgba(0, 0, 0, 0.65)`,
+            }}
+          >
             {/* Top bar */}
             <div className="h-11 bg-[#0d1528] border-b border-slate-700/50 flex items-center px-4 flex-shrink-0">
               <div className="flex items-center gap-2">
@@ -1190,7 +1303,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
           {/* Quick Case Registration Modal within hero mockup */}
           {showNewCaseModal && (
             <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-              <div className={`p-6 rounded-xl border max-w-md w-full font-mono text-xs shadow-2xl text-left ${cardBg}`}>
+              <div className={`p-6 rounded-xl border max-w-md w-full font-mono text-xs shadow-2xl text-left animate-scale-up ${cardBg}`}>
                 <div className="flex items-center justify-between border-b pb-3 mb-4">
                   <div className="flex items-center space-x-2">
                     <Plus className="w-4 h-4 text-cyan-500" />
@@ -1264,7 +1377,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
         </div>
 
         {/* Visual Lifecycle Workflow */}
-        <div className={`p-6 rounded-xl border mb-8 font-mono text-xs ${cardBg}`}>
+        <div className={`p-6 rounded-xl border mb-8 font-mono text-xs interactive-card ${cardBg}`}>
           <div className={`uppercase font-bold mb-4 text-[11px] text-left ${textSubtle}`}>
             The Fragile Document & Evidence Lifecycle:
           </div>
@@ -1278,7 +1391,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
               'Submitted',
               'Archived',
             ].map((step, idx) => (
-              <div key={idx} className={`p-2.5 rounded border transition-colors ${subtleBoxBg}`}>
+              <div key={idx} className={`p-2.5 rounded border transition-all duration-200 hover:scale-105 ${subtleBoxBg}`}>
                 <span className="text-cyan-600 dark:text-cyan-400 text-[10px] block font-bold">0{idx + 1}</span>
                 <span className={`font-semibold text-xs mt-1 block ${isLight ? 'text-slate-800' : 'text-slate-200'}`}>
                   {step}
@@ -1317,7 +1430,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
               answer: 'Genesis-anchored ($0^{64}$) hash-chained ledger preventing retroactive edits.',
             },
           ].map((item, idx) => (
-            <div key={idx} className={`p-4 rounded-lg border space-y-2 flex flex-col justify-between ${cardBg}`}>
+            <div key={idx} className={`p-4 rounded-lg border space-y-2 flex flex-col justify-between interactive-card ${cardBg}`}>
               <div className="space-y-1.5">
                 <div className="text-rose-600 dark:text-rose-400 font-mono text-xs font-bold flex items-center space-x-1">
                   <span>?</span>
@@ -1354,7 +1467,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
         </div>
 
         {/* Structured Visual Workflow Diagram */}
-        <div className={`p-6 md:p-8 rounded-xl border space-y-6 ${cardBg}`}>
+        <div className={`p-6 md:p-8 rounded-xl border space-y-6 interactive-card ${cardBg}`}>
           <div className="grid grid-cols-2 md:grid-cols-6 gap-3 text-center font-mono text-xs">
             {[
               { node: 'CASE', desc: 'Central case docket & investigator clearance' },
@@ -1364,7 +1477,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
               { node: 'AUDIT', desc: 'Genesis-anchored chained ledger' },
               { node: 'COURT / ARCHIVE', desc: 'Sec 65B/63 BSA certified filing' },
             ].map((step, idx) => (
-              <div key={idx} className={`p-3 rounded-lg border space-y-1 shadow-xs ${subtleBoxBg}`}>
+              <div key={idx} className={`p-3 rounded-lg border space-y-1 shadow-xs transition-transform duration-200 hover:-translate-y-1 ${subtleBoxBg}`}>
                 <span className="text-cyan-600 dark:text-cyan-400 font-bold text-xs block">{step.node}</span>
                 <p className={`text-[10px] font-sans ${textMuted}`}>{step.desc}</p>
               </div>
@@ -1403,7 +1516,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
           </span>
           <button
             onClick={() => setIsAutoPlayingTimeline(!isAutoPlayingTimeline)}
-            className={`px-3 py-1.5 rounded-lg border text-xs font-mono font-bold flex items-center justify-center space-x-1.5 transition ${
+            className={`px-3 py-1.5 rounded-lg border text-xs font-mono font-bold flex items-center justify-center space-x-1.5 transition hover:scale-105 active:scale-95 ${
               isAutoPlayingTimeline
                 ? 'bg-amber-100 border-amber-300 text-amber-900 dark:bg-amber-950 dark:text-amber-300 animate-pulse'
                 : 'bg-cyan-50 hover:bg-cyan-100 border-cyan-200 text-cyan-800 dark:bg-slate-900 dark:text-cyan-300'
@@ -1422,7 +1535,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
                 setActiveTimelineStage(idx);
                 setIsAutoPlayingTimeline(false);
               }}
-              className={`p-2.5 rounded-lg text-left transition flex flex-col justify-between ${
+              className={`p-2.5 rounded-lg text-left transition transform hover:scale-102 flex flex-col justify-between ${
                 activeTimelineStage === idx
                   ? 'bg-cyan-600 text-white font-bold shadow-md'
                   : isLight
@@ -1438,7 +1551,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
 
         {/* Timeline Inspector Card */}
         {timelineEvents[activeTimelineStage] && (
-          <div className={`p-6 rounded-xl border space-y-6 text-left ${cardBg}`}>
+          <div className={`p-6 rounded-xl border space-y-6 text-left interactive-card ${cardBg}`}>
             <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4 ${isLight ? 'border-slate-200' : 'border-slate-800'}`}>
               <div className="space-y-1">
                 <div className="flex items-center space-x-2 font-mono text-xs">
@@ -1544,9 +1657,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
               <button
                 key={cat}
                 onClick={() => setDocCategoryFilter(cat)}
-                className={`px-3 py-1.5 rounded-md border text-[11px] transition whitespace-nowrap ${
+                className={`px-3 py-1.5 rounded-md border text-[11px] transition whitespace-nowrap hover:scale-105 active:scale-95 transform ${
                   docCategoryFilter === cat
-                    ? 'bg-cyan-600 text-white font-bold border-cyan-600'
+                    ? 'bg-cyan-600 text-white font-bold border-cyan-600 shadow-xs'
                     : isLight
                     ? 'bg-white border-slate-300 text-slate-700 hover:bg-slate-100'
                     : 'bg-slate-900 border-slate-800 text-slate-300 hover:bg-slate-800'
@@ -1557,7 +1670,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
             ))}
           </div>
 
-          <div className={`flex items-center space-x-2 px-3 py-1.5 rounded-md border ${isLight ? 'bg-white border-slate-300 text-slate-800' : 'bg-slate-900 border-slate-800 text-white'}`}>
+          <div className={`flex items-center space-x-2 px-3 py-1.5 rounded-md border transition-all ${isLight ? 'bg-white border-slate-300 text-slate-800 focus-within:border-cyan-500' : 'bg-slate-900 border-slate-800 text-white focus-within:border-cyan-400'}`}>
             <Search className="w-3.5 h-3.5 text-slate-400" />
             <input
               type="text"
@@ -1575,7 +1688,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
         </div>
 
         {/* Operational Document Table */}
-        <div className={`rounded-xl border overflow-hidden shadow-xs ${cardBg}`}>
+        <div className={`rounded-xl border overflow-hidden shadow-xs interactive-card ${cardBg}`}>
           <div className="overflow-x-auto text-left">
             <table className="w-full text-left font-mono text-xs">
               <thead>
@@ -1597,7 +1710,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
                     <tr
                       key={idx}
                       onClick={() => setSelectedDocIndex(idx)}
-                      className={`cursor-pointer transition ${
+                      className={`cursor-pointer transition duration-150 ${
                         isSelected
                           ? isLight
                             ? 'bg-cyan-50/80 text-slate-900 font-semibold'
@@ -1645,7 +1758,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
                   <span className="text-slate-400">|</span>
                   <span className="text-slate-500">{filteredDocuments[selectedDocIndex].size}</span>
                   {verifiedDocSuccess && (
-                    <span className="text-[10px] text-emerald-600 font-bold bg-emerald-100 px-2 py-0.5 rounded">
+                    <span className="text-[10px] text-emerald-600 font-bold bg-emerald-100 px-2 py-0.5 rounded animate-scale-up">
                       ✓ Digest Verified Clean
                     </span>
                   )}
@@ -1662,7 +1775,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
                 <button
                   onClick={() => handleVerifyDocument(selectedDocIndex)}
                   disabled={verifyingDocIndex === selectedDocIndex}
-                  className={`px-3 py-2 border rounded text-xs transition flex items-center space-x-1 ${
+                  className={`px-3 py-2 border rounded text-xs transition flex items-center space-x-1 hover:scale-105 active:scale-95 transform ${
                     isLight
                       ? 'bg-white border-slate-300 hover:border-cyan-500 text-slate-800'
                       : 'bg-slate-900 border-slate-700 hover:border-cyan-400 text-white'
@@ -1674,7 +1787,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
 
                 <button
                   onClick={onEnterApp}
-                  className="px-3.5 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 text-white rounded text-xs transition flex items-center space-x-1 font-bold"
+                  className="px-3.5 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 text-white rounded text-xs transition flex items-center space-x-1 font-bold hover:scale-105 active:scale-95 transform"
                 >
                   <span>Open Full Record</span>
                   <ChevronRight className="w-3.5 h-3.5" />
@@ -1700,7 +1813,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
         </div>
 
         {/* Dynamic Interactive Tamper Simulation Box */}
-        <div className={`p-6 rounded-xl border mb-6 text-left shadow-sm ${cardBg}`}>
+        <div className={`p-6 rounded-xl border mb-6 text-left shadow-sm interactive-card ${cardBg}`}>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4 mb-4">
             <div>
               <div className="flex items-center space-x-2 font-mono text-xs font-bold">
@@ -1718,7 +1831,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
               <button
                 onClick={() => handleToggleTamper(true)}
                 disabled={tamperLoading || isTampered}
-                className={`px-3 py-1.5 rounded-lg border font-bold flex items-center space-x-1 transition ${
+                className={`px-3 py-1.5 rounded-lg border font-bold flex items-center space-x-1 transition hover:scale-105 active:scale-95 transform ${
                   isTampered
                     ? 'bg-rose-600 text-white border-rose-600 cursor-not-allowed'
                     : 'bg-rose-50 hover:bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-950 dark:text-rose-300'
@@ -1731,7 +1844,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
               <button
                 onClick={() => handleToggleTamper(false)}
                 disabled={tamperLoading || !isTampered}
-                className={`px-3 py-1.5 rounded-lg border font-bold flex items-center space-x-1 transition ${
+                className={`px-3 py-1.5 rounded-lg border font-bold flex items-center space-x-1 transition hover:scale-105 active:scale-95 transform ${
                   !isTampered
                     ? 'bg-emerald-600 text-white border-emerald-600 cursor-not-allowed'
                     : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-950 dark:text-emerald-300'
@@ -1752,8 +1865,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
               <div>
                 <span className={textSubtle}>Runtime SHA-256 Digest:</span>
                 <code
-                  className={`block truncate mt-0.5 font-bold ${
-                    isTampered ? 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/60 p-1 rounded' : 'text-cyan-600 dark:text-cyan-400'
+                  className={`block truncate mt-0.5 font-bold transition-all ${
+                    isTampered ? 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/60 p-1 rounded animate-pulse' : 'text-cyan-600 dark:text-cyan-400'
                   }`}
                 >
                   {isTampered
@@ -1787,7 +1900,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
           {/* Fragment 1: Cross-Case Authorization Barrier */}
-          <div className={`p-6 rounded-xl border space-y-4 ${cardBg}`}>
+          <div className={`p-6 rounded-xl border space-y-4 interactive-card ${cardBg}`}>
             <div className={`flex items-center justify-between border-b pb-3 font-mono text-xs ${isLight ? 'border-slate-200' : 'border-slate-800'}`}>
               <span className={`font-bold flex items-center space-x-2 ${isLight ? 'text-slate-900' : 'text-white'}`}>
                 <Key className="w-4 h-4 text-amber-500" />
@@ -1826,7 +1939,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
           </div>
 
           {/* Fragment 2: Genesis Hash-Chained Audit Ledger */}
-          <div className={`p-6 rounded-xl border space-y-4 ${cardBg}`}>
+          <div className={`p-6 rounded-xl border space-y-4 interactive-card ${cardBg}`}>
             <div className={`flex items-center justify-between border-b pb-3 font-mono text-xs ${isLight ? 'border-slate-200' : 'border-slate-800'}`}>
               <span className={`font-bold flex items-center space-x-2 ${isLight ? 'text-slate-900' : 'text-white'}`}>
                 <History className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
@@ -1877,7 +1990,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 text-left">
           {/* Tree Node Structure */}
-          <div className={`lg:col-span-2 p-6 rounded-xl border font-mono text-xs space-y-2 ${cardBg}`}>
+          <div className={`lg:col-span-2 p-6 rounded-xl border font-mono text-xs space-y-2 interactive-card ${cardBg}`}>
             <div className={`uppercase text-[10px] font-bold border-b pb-2 ${isLight ? 'border-slate-200 text-slate-500' : 'border-slate-800 text-slate-400'}`}>
               Case Entity Structure (Click node to inspect)
             </div>
@@ -1885,7 +1998,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
             <div className="space-y-1 pt-2">
               <button
                 onClick={() => setSelectedTreeNode('case')}
-                className={`w-full text-left p-2.5 rounded transition flex items-center space-x-2 ${
+                className={`w-full text-left p-2.5 rounded transition duration-150 flex items-center space-x-2 ${
                   selectedTreeNode === 'case'
                     ? 'bg-cyan-600 text-white font-bold shadow-xs'
                     : isLight
@@ -1913,7 +2026,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
                     <button
                       key={node.key}
                       onClick={() => setSelectedTreeNode(node.key)}
-                      className={`w-full text-left p-2 rounded transition flex items-center justify-between ${
+                      className={`w-full text-left p-2 rounded transition duration-150 flex items-center justify-between ${
                         isNodeSelected
                           ? 'bg-cyan-600 text-white font-bold shadow-xs'
                           : isLight
@@ -1932,7 +2045,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
 
           {/* Node Attribute Inspector */}
           {treeNodes[selectedTreeNode] && (
-            <div className={`p-6 rounded-xl border space-y-4 font-mono text-xs flex flex-col justify-between ${cardBg}`}>
+            <div className={`p-6 rounded-xl border space-y-4 font-mono text-xs flex flex-col justify-between interactive-card ${cardBg}`}>
               <div className="space-y-3">
                 <div className={`border-b pb-2 ${isLight ? 'border-slate-200' : 'border-slate-800'}`}>
                   <span className={`text-[10px] uppercase block ${textSubtle}`}>Category:</span>
@@ -2035,7 +2148,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
 
         {/* Tab 1: Statement */}
         {activeDossierTab === 'statement' && (
-          <div className={`p-6 rounded-xl border space-y-4 font-sans text-xs text-left ${cardBg}`}>
+          <div className={`p-6 rounded-xl border space-y-4 font-sans text-xs text-left interactive-card ${cardBg}`}>
             <div className={`space-y-2 border-b pb-4 ${isLight ? 'border-slate-200' : 'border-slate-800'}`}>
               <span className="font-mono text-cyan-600 dark:text-cyan-400 uppercase text-xs font-bold block">
                 • Background Context
@@ -2066,7 +2179,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
               { flaw: 'Cross-department delays', fix: 'Compartmentalized divisions (Cyber, Anti-Cartel, EOW, Legal)' },
               { flaw: 'Poor audit compliance', fix: 'Genesis-anchored SHA-256 hash-chained immutable audit ledger' },
             ].map((item, idx) => (
-              <div key={idx} className={`p-3 rounded-lg border space-y-1 ${cardBg}`}>
+              <div key={idx} className={`p-3 rounded-lg border space-y-1 interactive-card ${cardBg}`}>
                 <div className="text-rose-600 dark:text-rose-400 font-bold">• {item.flaw}</div>
                 <div className="text-emerald-600 dark:text-emerald-400 font-sans text-[11px] pl-2 font-medium">
                   ↳ {item.fix}
@@ -2088,7 +2201,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
               { id: '06', title: 'Support Authorized Collaboration', detail: 'Secure JIT temporary sharing links with 192-bit entropy and auto-expiration.' },
               { id: '07', title: 'Ensure Regulatory Compliance', detail: 'PKI RSA-PSS asymmetric digital signatures and zero-leakage public QR verification.' },
             ].map((m) => (
-              <div key={m.id} className={`p-4 rounded-lg border space-y-1.5 ${cardBg}`}>
+              <div key={m.id} className={`p-4 rounded-lg border space-y-1.5 interactive-card ${cardBg}`}>
                 <div className="flex items-center justify-between">
                   <span className="text-cyan-600 dark:text-cyan-400 font-bold text-sm">{m.id}</span>
                   <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">VERIFIED</span>
@@ -2102,7 +2215,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
 
         {/* Tab 4: Police Asset Lifecycle */}
         {activeDossierTab === 'lifecycle' && (
-          <div className={`p-6 rounded-xl border space-y-3 font-mono text-xs text-left ${cardBg}`}>
+          <div className={`p-6 rounded-xl border space-y-3 font-mono text-xs text-left interactive-card ${cardBg}`}>
             <span className="text-cyan-600 dark:text-cyan-400 font-bold uppercase text-xs block">
               End-to-End Asset Custody & Lifecycle Management
             </span>
@@ -2137,7 +2250,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
           <div className="pt-2">
             <button
               onClick={onEnterApp}
-              className="px-8 py-3.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-md inline-flex items-center space-x-2 transition active:scale-95"
+              className="px-8 py-3.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-md inline-flex items-center space-x-2 transition transform hover:scale-105 active:scale-95"
             >
               <span>Open SecureVault Platform</span>
               <ArrowRight className="w-4 h-4" />
